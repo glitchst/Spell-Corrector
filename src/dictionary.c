@@ -145,6 +145,7 @@ wchar_t **find_suggestions(wchar_t *word, wchar_t *alphabet,
   int i;
   unsigned int next, editsSpace, suggestionsSpace, resultSize = 0,
                wordLength = wcslen(word);
+  int resMax = 50;
   wchar_t **suggestions = NULL;
   wchar_t lowercaseWord[wordLength + 1];
   
@@ -172,11 +173,15 @@ wchar_t **find_suggestions(wchar_t *word, wchar_t *alphabet,
   /* Iterate through the edits array and if we find an edit in the
    * dictionary, add it to the suggestions */
   for (i = 0; i < editsSpace; i++) {
-    if (is_in_dictionary(edits[i]) &&
-        !array_is_duplicate(suggestions, resultSize, edits[i])) {
-      suggestions = realloc(suggestions,
-                            (resultSize + 1) * sizeof(wchar_t *));
-      suggestions[resultSize++] = edits[i];
+    if (is_in_dictionary(edits[i])) {
+      if (!array_is_duplicate(suggestions, resultSize, edits[i])) {
+        if (resultSize >= resMax) {
+          resMax *= 2;
+          suggestions = realloc(suggestions, sizeof(wchar_t *) * resMax);
+        }
+        
+        suggestions[resultSize++] = edits[i];
+      }
     }
   }
 

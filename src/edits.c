@@ -29,42 +29,14 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-/* Substring function */
-static wchar_t *substr(const wchar_t *str, size_t offset, size_t limit) {
-  wchar_t *newStr;
-  size_t strSize = wcslen(str);
-  
-  if ((limit > strSize) || ((offset + limit) > strSize) || (strSize < 1) ||
-      (limit == 0))
-    return NULL;
-    
-  newStr = malloc((limit + 1) * sizeof(wchar_t));
-  
-  if (!newStr)
-    return NULL;
-    
-  wcsncpy(newStr, str + offset, limit);
-  *(newStr + limit) = L'\0';
-  
-  return newStr;
-}
-
-/* Another take on wcscat/strcat */
-static wchar_t *concat(wchar_t *str1, wchar_t *str2) {
-  if (!str1) {
-    str1 = malloc(sizeof(wchar_t));
-    *str1 = L'\0';
+static void append(wchar_t *dst, int *dstLen, const wchar_t *src,
+                   int srcBegin, int len) {
+  if (len > 0) {
+    wmemcpy(&dst[*dstLen], &src[srcBegin], len);
+    *dstLen += len;
   }
   
-  if (!str2) {
-    str2 = malloc(sizeof(wchar_t));
-    *str2 = L'\0';
-  }
-  
-  wchar_t *newStr = malloc(wcslen(str1) + wcslen(str2) + 1);
-  newStr = wcscat(str1, str2);
-
-  return newStr;
+  dst[*dstLen] = L'\0';
 }
 
 /* Calculates the space necessary for storing all the operations */
@@ -89,27 +61,31 @@ unsigned int calculate_edits_space(wchar_t *word, wchar_t *alphabet) {
 
 /* Performs deletions */
 unsigned int edit_deletions(wchar_t *word, wchar_t **array, int start) {
-  unsigned int i;
+  unsigned int i = 0;
   int wordLength = wcslen(word);
   
-  for (i = 0; i < wordLength; i++) {
-    array[i + start] = concat(substr(word, 0, i),
-                              substr(word, i + 1, wordLength - (i + 1)));
+  for (; i < wordLength; i++) {
+    int pos = 0;
+    array[i + start] = malloc(sizeof(wchar_t) * wordLength);
+    append(array[i + start], &pos, word, 0 , i);
+    append(array[i + start], &pos, word, i + 1, wordLength - (i + 1));
   }
   
   return i;
 }
 
 /* Performs transpositions */
-unsigned int edit_transpositions(wchar_t *word, wchar_t **array, int start) {
-  unsigned int i;
+unsigned int edit_transpositions(const wchar_t *word, wchar_t **array, int start) {
+  unsigned int i = 0;
   int wordLength = wcslen(word);
   
-  for (i = 0; i < wordLength - 1; i++) {
-    array[i + start] = (
-      concat(concat(substr(word, 0, i), substr(word, i + 1, 1)),
-             concat(substr(word, i, 1), substr(word, i + 2, 
-                                               wordLength - (i + 2)))));
+  for (; i < wordLength; i++) {
+    int pos = 0;
+    array[i + start] = malloc(sizeof(wint_t) * (wordLength + 2));
+    append(array[i + start], &pos, word, 0, i);
+    append(array[i + start], &pos, word, i + 1, 1);
+    append(array[i + start], &pos, word, i, 1);
+    append(array[i + start], &pos, word, i + 2, wordLength - (i + 2));
   }
   
   return i;
@@ -119,17 +95,20 @@ unsigned int edit_transpositions(wchar_t *word, wchar_t **array, int start) {
 unsigned int edit_alterations(wchar_t *word, wchar_t **array, int start,
                               wchar_t *alphabet) {
   int i, j, wordLength = wcslen(word), alphabetSize = wcslen(alphabet);
-  unsigned int k;
-  wchar_t c[2] = {0, 0};
+  unsigned int k = 0;
+  wchar_t c[2] = {};
  
-  for (i = 0, k = 0; i < wordLength; i++) {
+  for (i = 0; i < wordLength; i++) {
     for (j = 0; j < alphabetSize; j++, k++) {
+      int pos = 0;
       c[0] = alphabet[j];
-      array[start + k] = concat(concat(substr(word, 0, i), (wchar_t *)&c),
-                                substr(word, i + 1, wordLength - (i + 1)));
+      array[k + start] = malloc(sizeof(wint_t) * (wordLength + 3));
+      append(array[k + start], &pos, word, 0, i);
+      append(array[k + start], &pos, c, 0, 1);
+      append(array[k + start], &pos, word, i + 1, wordLength - (i + 1));
     }
   }
-  
+
   return k;
 }
 
@@ -137,16 +116,20 @@ unsigned int edit_alterations(wchar_t *word, wchar_t **array, int start,
 unsigned int edit_insertions(wchar_t *word, wchar_t **array, int start,
                              wchar_t *alphabet) {
   int i, j, wordLength = wcslen(word), alphabetSize = wcslen(alphabet);
-  unsigned int k;
+  unsigned int k = 0;
   wchar_t c[2] = {0, 0};
 
-  for (i = 0, k = 0; i <= wordLength; i++) {
+  for (i = 0; i <= wordLength; i++) {
     for (j = 0; j < alphabetSize; j++, k++) {
+      int pos = 0;
       c[0] = alphabet[j];
-      array[start + k] = concat(concat(substr(word, 0, i), (wchar_t *)&c),
-                                substr(word, i, wordLength - i));
+      array[k + start] = malloc(sizeof(wint_t) * (wordLength + 3));
+      append(array[k + start], &pos, word, 0, i);
+      append(array[k + start], &pos, c, 0, 1);
+      append(array[k + start], &pos, word, i, wordLength - i);
     }
   }
   
   return k;
 }
+

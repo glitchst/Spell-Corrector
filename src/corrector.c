@@ -17,7 +17,7 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
   int i, sugAmount, isDictLoaded, isDictUnloaded, count = 0, index = 0, 
       misspellings = 0, totalWords = 0;
 
-  wchar_t *alphabet = NULL;
+  wchar_t *alphabet;
   wchar_t buffer[MAX_WORD_SIZE + 1];
   
   /* Load the dictionary into memory */
@@ -48,14 +48,13 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
   /* Open the alphabet file, default is handled by main.c */
   FILE *alphabetFile = fopen(alphabetFileLoc, "r");
   
+  /* If there's an alphabet file, we create a string with its contents */
   if (alphabetFile) {
-    /* If the alphabet file was loaded successfully, then we can
-     * build the alphabet string we're going to use for the word 
-     * operations */
-    for (wint_t c = fgetwc(alphabetFile); c != WEOF;
-         c = fgetwc(alphabetFile)) {
-      alphabet = realloc(alphabet, (count + 1) * sizeof(wchar_t));
-      alphabet[count++] = c;
+    wchar_t buffer[1000];
+
+    if (fwscanf(alphabetFile, L"%ls", buffer) > 0) {
+      alphabet = malloc((wcslen(buffer) + 1) * sizeof(wchar_t));
+      alphabet = wcscpy(alphabet, buffer);
     }
   } else {
     return -4;
@@ -121,8 +120,13 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
           /* Add a separator for the next word */
           fwprintf(outputFile, L"\n\n");
           
-          /* @TODO: free free memory used by suggestions */
+          /* Free the memory used by suggestions */
+          wchar_t **temp = suggestions;
+
+          for (i = 0; i < sugAmount; i++)
+            free(temp[i]);
           
+          free(suggestions);
         } else {
           /* If there's no suggestions, we warn the user */
           fwprintf(outputFile,
