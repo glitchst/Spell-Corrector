@@ -1,0 +1,33 @@
+Misspelled words in aCorregir.txt:
+============
+dia >>
+	da	ida	ria	dea	día	dúa	dij	din	diu	dix	dina	dita	diva	dial	diay
+
+epoca >>
+	época	epoda
+
+qumica >>
+	química
+
+perrro >>
+	perro	perero	perrero
+
+Pureba >>
+	prueba	purera	pureta	pureza
+
+on >>
+	n	o	no	en	in	un	oa	oc	oh	os	ox	bon	con	don	fon	ion	non	pon	ron	son	ton	ona
+
+palabras >>
+	palabra
+
+correctas >> no suggestions were found.
+
+esta >>
+	eta	est	seta	asta	osta	enta	esca	este	cesta	festa	gesta	resta	testa	estar	estay
+
+tambien >>
+	también
+
+okkoeokfmb >> no suggestions were found.
+
