@@ -12,7 +12,7 @@
 #include "dictionary.h"
 #include "corrector.h"
 
-int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
+CorrectorStatus spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
                     char *outputFileLoc, char *alphabetFileLoc) {
   int i, sugAmount, isDictLoaded, isDictUnloaded, count = 0, index = 0, 
       misspellings = 0, totalWords = 0;
@@ -25,21 +25,21 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
   
   /* Return an error code if there was a problem */
   if (!isDictLoaded)
-    return -1;
+    return FAIL_DICTFILE;
     
   /* Open the input file, containing the words to correct. */
   FILE *inputFile = fopen(inputFileLoc, "r");
   
   /* Return an error code if there was a problem loading the file */
   if (!inputFile)
-    return -2;
+    return FAIL_INPUTFILE;
   
   /* We open the output file in w+ mode so we can write into it */
   FILE *outputFile = fopen(outputFileLoc, "w+");
   
   /* Return an error code if there was a problem loading the file */
   if (!outputFile)
-    return -3;
+    return FAIL_OUTPUTFILE;
     
   /* Write a simple header for the file */
   fwprintf(outputFile, L"Misspelled words in %s:\n============\n",
@@ -47,17 +47,16 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
   
   /* Open the alphabet file, default is handled by main.c */
   FILE *alphabetFile = fopen(alphabetFileLoc, "r");
-  
-  /* If there's an alphabet file, we create a string with its contents */
-  if (alphabetFile) {
-    wchar_t buffer[1000];
 
-    if (fwscanf(alphabetFile, L"%ls", buffer) > 0) {
-      alphabet = malloc((wcslen(buffer) + 1) * sizeof(wchar_t));
-      alphabet = wcscpy(alphabet, buffer);
+  if (alphabetFile) {
+    wchar_t alphBuffer[1000];
+    if (fwscanf(alphabetFile, L"%ls", alphBuffer) > 0) {
+      wprintf(L"DEBUG > buffer len %d\n\n", wcslen(alphBuffer));
+      alphabet = malloc((wcslen(alphBuffer) + 1) * sizeof(wchar_t));
+      alphabet = wcscpy(alphabet, alphBuffer);
     }
   } else {
-    return -4;
+    return FAIL_ALPHABETFILE;
   }
   
   /* Start the corrector process */
@@ -100,8 +99,7 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
       if (!is_in_dictionary(buffer)) {
         /* We use the function to find possible suggestions for the word
          * in question */
-        wchar_t **suggestions = find_suggestions(buffer, alphabet,
-                                                 &sugAmount);
+        wchar_t **suggestions = find_suggestions(buffer, alphabet, &sugAmount);
         
         /* Add one to the misspellings counter */
         misspellings++;
@@ -120,9 +118,7 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
           /* Add a separator for the next word */
           fwprintf(outputFile, L"\n\n");
           
-          /* Free the memory used by suggestions */
           wchar_t **temp = suggestions;
-
           for (i = 0; i < sugAmount; i++)
             free(temp[i]);
           
@@ -159,6 +155,6 @@ int spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
   fclose(inputFile);
   fclose(outputFile);
   
-  /* We return 0 as a success code */
-  return 0;
+  /* Return the success code */
+  return CORR_SUCCESS;
 }

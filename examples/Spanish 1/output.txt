@@ -1,0 +1,101 @@
+Misspelled words in input.txt:
+============
+dia >>
+	da	ida	ria	dea	día	dúa	dij	din	diu	dix	dina	dita	diva	dial	diay
+
+epoca >>
+	época	epoda
+
+qumica >>
+	química
+
+perrro >>
+	perro	perero	perrero
+
+Pureba >>
+	prueba	purera	pureta	pureza
+
+on >>
+	n	o	no	en	in	un	oa	oc	oh	os	ox	bon	con	don	fon	ion	non	pon	ron	son	ton	ona
+
+palabras >>
+	palabra
+
+correctas >>
+
+
+esta >>
+	eta	est	seta	asta	osta	enta	esca	este	cesta	festa	gesta	resta	testa	estar	estay
+
+tambien >>
+	también
+
+okkoeokfmb >>
+
+
+contiene >>
+
+
+palabras >>
+	palabra
+
+corerctas >>
+
+
+incorrectas >>
+
+
+esta >>
+	eta	est	seta	asta	osta	enta	esca	este	cesta	festa	gesta	resta	testa	estar	estay
+
+maneja >>
+	manea	madeja	manija	manera	manejo	manejar
+
+palabras >>
+	palabra
+
+es >>
+	s	e	se	as	os	ea	eh	el	en	et	ex	bes	des	les	mes	res	ses	ese	est
+
+peasr >>
+	pesar
+
+algunas >>
+
+
+estas >>
+	estos	estar	estay
+
+palabras >>
+	palabra
+
+estan >>
+	estar	estay	estand
+
+marcara >>
+	marcar
+
+incorrectas >>
+
+
+Esto >>
+	est	seto	este	cesto	gesto	mesto	pesto	resto	estro	estío	estol	estor	estos
+
+contiene >>
+
+
+conjugaciones >>
+
+
+verbos >>
+	verbo	verboso
+
+sustantivos >>
+	sustantivo
+
+modismos >>
+	modismo
+
+etceterca >>
+
+

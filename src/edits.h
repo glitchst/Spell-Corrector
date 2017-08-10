@@ -10,7 +10,7 @@ unsigned int calculate_edits_space(wchar_t *word, wchar_t *alphabet);
 unsigned int edit_deletions(wchar_t *word, wchar_t **array, int start);
 
 /* Performs transpositions */
-unsigned int edit_transpositions(wchar_t *word, wchar_t **array,
+unsigned int edit_transpositions(const wchar_t *word, wchar_t **array,
                                  int start);
 
 /* Performs alterations */

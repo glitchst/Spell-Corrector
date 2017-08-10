@@ -4,9 +4,9 @@
 #include <stddef.h>
 #include <wchar.h>
 
-#define ALPHABET_SIZE 26
-#define MAX_WORD_SIZE 45
-#define HASH_SIZE     4000
+#define ALPHABET_SIZE   26
+#define MAX_WORD_SIZE   45
+#define HASH_SIZE       20000
 
 #define true  1
 #define false 0

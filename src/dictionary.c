@@ -6,12 +6,10 @@
  * possible correct words based off an incorrect one, and finally unload
  * the dictionary from memory.
  */
-#include <ctype.h>
 #include <locale.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <wchar.h>
 #include <wctype.h>
 
@@ -93,34 +91,47 @@ int load_dictionary(const char *location) {
   return true;
 }
 
+static wchar_t *wcstolower(const wchar_t *word) {
+  int i;
+  size_t len = wcslen(word);
+  wchar_t *res = malloc((len + 1) * sizeof(wchar_t));
+  
+  for (i = 0; i < len; i++) {
+    if (!iswlower(word[i]))
+      res[i] = towlower(word[i]);
+    else
+      res[i] = word[i];
+  }
+  
+  res[len] = L'\0';
+  
+  return res;
+}
+
 /* Checks whether a word is in the dictionary */
 int is_in_dictionary(const wchar_t *word) {
   int i, wordLength = wcslen(word);
-  wchar_t lowercaseWord[wordLength + 1];
+  wchar_t *lowercaseWord;
   
   /* We need a lowercase word to check against the dictionary. Usually,
    * if the person who built the dictionary was a good samaritan all 
    * words should be lowercase */
-  for (i = 0; i < wordLength; i++) {
-    if (!iswlower(word[i]))
-      lowercaseWord[i] = towlower(word[i]);
-    else
-      lowercaseWord[i] = word[i];
-  }
-
-  /* Null-terminate the string */
-  lowercaseWord[wordLength] = '\0';
+  lowercaseWord = wcstolower(word);
 
   int bucket = hash_function(lowercaseWord);
   HashNode *cursor = hashtable[bucket];
   
   /* Iterate through the linked list to check if the word is there */
   while (cursor) {
-    if (wcscmp(lowercaseWord, cursor->word) == 0)
+    if (wcscmp(lowercaseWord, cursor->word) == 0) {
+      free(lowercaseWord);
       return true;
+    }
       
     cursor = cursor->next;
   }
+  
+  free(lowercaseWord);
 
   return false;
 }
@@ -146,23 +157,12 @@ wchar_t **find_suggestions(wchar_t *word, wchar_t *alphabet,
   unsigned int next, editsSpace, suggestionsSpace, resultSize = 0,
                wordLength = wcslen(word);
   int resMax = 50;
-  wchar_t **suggestions = NULL;
-  wchar_t lowercaseWord[wordLength + 1];
-  
-  /* Convert word to lowercase */
-  for (i = 0; i < wordLength; i++) {
-    if (!iswlower(word[i]))
-      lowercaseWord[i] = towlower(word[i]);
-    else
-      lowercaseWord[i] = word[i];
-  }
-
-  /* Null-terminate the string */
-  lowercaseWord[wordLength] = L'\0';
+  wchar_t **suggestions = malloc(sizeof(wchar_t *) * resMax);
+  wchar_t *lowercaseWord = wcstolower(word);
   
   /* Calculate the space necesary to store the edits of the word */
   editsSpace = calculate_edits_space(lowercaseWord, alphabet);
-  wchar_t *edits[editsSpace];
+  wchar_t **edits = malloc((editsSpace + 1) * sizeof(wchar_t *));
   
   /* Use the edits.h functions to operate over the word */
   next  = edit_deletions(lowercaseWord, edits, 0);
@@ -180,10 +180,21 @@ wchar_t **find_suggestions(wchar_t *word, wchar_t *alphabet,
           suggestions = realloc(suggestions, sizeof(wchar_t *) * resMax);
         }
         
-        suggestions[resultSize++] = edits[i];
+        //suggestions[resultSize++] = edits[i];
+        suggestions[resultSize] = malloc((wcslen(edits[i]) + 1) * sizeof(wchar_t));
+        suggestions[resultSize] = wcscpy(suggestions[resultSize], edits[i]);
+        resultSize++;
       }
     }
   }
+  
+  free(lowercaseWord);
+  
+  wchar_t **temp = edits;
+  for (i = 0; i < editsSpace + 1; i++)
+    free(temp[i]);
+    
+  free(edits);
 
   *resultsAmount = resultSize;
   

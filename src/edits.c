@@ -25,10 +25,11 @@
  */
 #include <stddef.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <wchar.h>
 
+/* This function appends a set of characters from src to the correct
+ * place in dst */
 static void append(wchar_t *dst, int *dstLen, const wchar_t *src,
                    int srcBegin, int len) {
   if (len > 0) {
@@ -75,13 +76,14 @@ unsigned int edit_deletions(wchar_t *word, wchar_t **array, int start) {
 }
 
 /* Performs transpositions */
-unsigned int edit_transpositions(const wchar_t *word, wchar_t **array, int start) {
+unsigned int edit_transpositions(const wchar_t *word, wchar_t **array,
+                                 int start) {
   unsigned int i = 0;
   int wordLength = wcslen(word);
   
   for (; i < wordLength; i++) {
     int pos = 0;
-    array[i + start] = malloc(sizeof(wint_t) * (wordLength + 2));
+    array[i + start] = malloc(sizeof(wchar_t) * (wordLength + 2));
     append(array[i + start], &pos, word, 0, i);
     append(array[i + start], &pos, word, i + 1, 1);
     append(array[i + start], &pos, word, i, 1);
@@ -102,7 +104,7 @@ unsigned int edit_alterations(wchar_t *word, wchar_t **array, int start,
     for (j = 0; j < alphabetSize; j++, k++) {
       int pos = 0;
       c[0] = alphabet[j];
-      array[k + start] = malloc(sizeof(wint_t) * (wordLength + 3));
+      array[k + start] = malloc(sizeof(wchar_t) * (wordLength + 2));
       append(array[k + start], &pos, word, 0, i);
       append(array[k + start], &pos, c, 0, 1);
       append(array[k + start], &pos, word, i + 1, wordLength - (i + 1));
@@ -123,7 +125,7 @@ unsigned int edit_insertions(wchar_t *word, wchar_t **array, int start,
     for (j = 0; j < alphabetSize; j++, k++) {
       int pos = 0;
       c[0] = alphabet[j];
-      array[k + start] = malloc(sizeof(wint_t) * (wordLength + 3));
+      array[k + start] = malloc(sizeof(wchar_t) * (wordLength + 2));
       append(array[k + start], &pos, word, 0, i);
       append(array[k + start], &pos, c, 0, 1);
       append(array[k + start], &pos, word, i, wordLength - i);
@@ -132,4 +134,3 @@ unsigned int edit_insertions(wchar_t *word, wchar_t **array, int start,
   
   return k;
 }
-

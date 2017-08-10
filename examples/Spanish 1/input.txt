@@ -1,0 +1,5 @@
+dia epoca qumica perrro Pureba on
+palabras correctas en esta línea.
+"tambien" okkoeokfmb
+Este texto contiene tanto palabras corerctas como incorrectas. Nada mas esta escrito de est manera para ver como se maneja el programa en un entorno con mas palabras. Una nota importante es que a peasr de que algunas de estas palabras estan bien, el corrector las marcara como incorrectas. Esto se debe a que el diccionario en si no contiene conjugaciones de verbos, ni sustantivos en plural, ni en tercera persona; ni modismos, etceterca.
+

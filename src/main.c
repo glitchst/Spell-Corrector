@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <wchar.h>
 
 #include "corrector.h"
@@ -14,7 +15,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   
-  int correctorStatus;
+  CorrectorStatus status;
   char *dictionaryLoc, *inputFileLoc, *outputFileLoc, *alphabetFileLoc;
   
   /* Obligatory arguments */
@@ -22,34 +23,37 @@ int main(int argc, char *argv[]) {
   outputFileLoc     = argv[2];
   dictionaryLoc     = argv[3];
   
-  /* Checkeamos si hay archivo de alfabeto */
-  alphabetFileLoc   = (argv[4]) ? argv[4] : "defaultAlphabet.txt";
+  /* Check for the alphabet file */
+  if (argc == 5)
+    alphabetFileLoc = argv[4];
+  else
+    alphabetFileLoc = "defaultDictionary.txt";
   
-  correctorStatus = spell_corrector(dictionaryLoc, inputFileLoc,
+  status = spell_corrector(dictionaryLoc, inputFileLoc,
                                     outputFileLoc, alphabetFileLoc);
                                     
-  switch (correctorStatus) {
-    case 0:
+  switch (status) {
+    case CORR_SUCCESS:
       wprintf(L"Program was executed correctly.\n");
       wprintf(L"Incorrect words with their suggestions can be found");
       wprintf(L" in [%s]\n\n", outputFileLoc);
       break;
     
-    case -1:
+    case FAIL_DICTFILE:
       wprintf(L"ERROR: Dictionary could not be loaded/found.\n");
-      return -1;
+      exit(FAIL_DICTFILE);
       
-    case -2:
+    case FAIL_INPUTFILE:
       wprintf(L"ERROR: Input file could not be loaded/found.\n");
-      return -2;
+      exit(FAIL_INPUTFILE);
       
-    case -3:
+    case FAIL_OUTPUTFILE:
       wprintf(L"ERROR: Output file could not be loaded/found.\n");
-      return -3;
+      exit(FAIL_OUTPUTFILE);
       
-    case -4:
+    case FAIL_ALPHABETFILE:
       wprintf(L"ERROR: Alphabet file could not be loaded/found.\n");
-      return -3;
+      exit(FAIL_ALPHABETFILE);
   }
 
   return 0;
