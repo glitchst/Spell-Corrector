@@ -105,7 +105,7 @@ CorrectorStatus spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
         misspellings++;
         
         /* If there is suggestions, we add them to the file */
-        if (suggestions) {
+        if (sugAmount > 0) {
           /* Print the incorrect word to the file and add a new line for
            * some pretty nice formatting ;) */
           fwprintf(outputFile, L"%ls >>\n", buffer);
@@ -128,6 +128,7 @@ CorrectorStatus spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
           fwprintf(outputFile,
                    L"%ls >> no suggestions were found.\n\n",
                    buffer);
+          free(suggestions);
         }
       }
 
