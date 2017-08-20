@@ -177,12 +177,13 @@ wchar_t **find_suggestions(wchar_t *word, wchar_t *alphabet,
       if (!array_is_duplicate(suggestions, resultSize, edits[i])) {
         if (resultSize >= resMax) {
           resMax *= 2;
-          suggestions = realloc(suggestions, sizeof(wchar_t *) * resMax);
+          suggestions = realloc(suggestions,sizeof(wchar_t *) * resMax);
         }
         
-        //suggestions[resultSize++] = edits[i];
-        suggestions[resultSize] = malloc((wcslen(edits[i]) + 1) * sizeof(wchar_t));
-        suggestions[resultSize] = wcscpy(suggestions[resultSize], edits[i]);
+        int sz = (wcslen(edits[i]) + 1) * sizeof(wchar_t);
+        suggestions[resultSize] = malloc(sz);
+        suggestions[resultSize] = wcscpy(suggestions[resultSize], 
+                                         edits[i]);
         resultSize++;
       }
     }

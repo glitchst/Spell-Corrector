@@ -1,13 +1,12 @@
-Misspelled words in input.txt:
+Misspelled words in examples/Spanish 1/input.txt:
 ============
 dia >>
-	da	ida	ria	dea	día	dúa	dij	din	diu	dix	dina	dita	diva	dial	diay
+	da	ida	ria	dea	dij	din	diu	dix	dina	dita	diva	dial	diay
 
 epoca >>
-	época	epoda
+	epoda
 
-qumica >>
-	química
+qumica >> no suggestions were found.
 
 perrro >>
 	perro	perero	perrero
@@ -21,29 +20,23 @@ on >>
 palabras >>
 	palabra
 
-correctas >>
-
+correctas >> no suggestions were found.
 
 esta >>
 	eta	est	seta	asta	osta	enta	esca	este	cesta	festa	gesta	resta	testa	estar	estay
 
-tambien >>
-	también
+tambien >> no suggestions were found.
 
-okkoeokfmb >>
+okkoeokfmb >> no suggestions were found.
 
-
-contiene >>
-
+contiene >> no suggestions were found.
 
 palabras >>
 	palabra
 
-corerctas >>
+corerctas >> no suggestions were found.
 
-
-incorrectas >>
-
+incorrectas >> no suggestions were found.
 
 esta >>
 	eta	est	seta	asta	osta	enta	esca	este	cesta	festa	gesta	resta	testa	estar	estay
@@ -60,8 +53,7 @@ es >>
 peasr >>
 	pesar
 
-algunas >>
-
+algunas >> no suggestions were found.
 
 estas >>
 	estos	estar	estay
@@ -75,17 +67,14 @@ estan >>
 marcara >>
 	marcar
 
-incorrectas >>
-
+incorrectas >> no suggestions were found.
 
 Esto >>
-	est	seto	este	cesto	gesto	mesto	pesto	resto	estro	estío	estol	estor	estos
+	est	seto	este	cesto	gesto	mesto	pesto	resto	estro	estol	estor	estos
 
-contiene >>
+contiene >> no suggestions were found.
 
-
-conjugaciones >>
-
+conjugaciones >> no suggestions were found.
 
 verbos >>
 	verbo	verboso
@@ -96,6 +85,5 @@ sustantivos >>
 modismos >>
 	modismo
 
-etceterca >>
-
+etceterca >> no suggestions were found.
 

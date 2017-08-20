@@ -27,7 +27,8 @@ int main(int argc, char *argv[]) {
   if (argc == 5)
     alphabetFileLoc = argv[4];
   else
-    alphabetFileLoc = "defaultDictionary.txt";
+	alphabetFileLoc = NULL;
+
   
   status = spell_corrector(dictionaryLoc, inputFileLoc,
                                     outputFileLoc, alphabetFileLoc);

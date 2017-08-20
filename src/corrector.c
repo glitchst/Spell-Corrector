@@ -12,8 +12,9 @@
 #include "dictionary.h"
 #include "corrector.h"
 
-CorrectorStatus spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
-                    char *outputFileLoc, char *alphabetFileLoc) {
+CorrectorStatus spell_corrector(char *dictionaryFileLoc,
+                                char *inputFileLoc, char *outputFileLoc,
+                                char *alphabetFileLoc) {
   int i, sugAmount, isDictLoaded, isDictUnloaded, count = 0, index = 0, 
       misspellings = 0, totalWords = 0;
 
@@ -45,13 +46,18 @@ CorrectorStatus spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
   fwprintf(outputFile, L"Misspelled words in %s:\n============\n",
            inputFileLoc);
   
-  /* Open the alphabet file, default is handled by main.c */
-  FILE *alphabetFile = fopen(alphabetFileLoc, "r");
+  /* Open the alphabet file */
+  FILE *alphabetFile;
+  if (!alphabetFileLoc) {
+    alphabetFile = fopen("./defaultAlphabet.txt", "r");
+  } else {
+    alphabetFile = fopen(alphabetFileLoc, "r");
+  }
 
   if (alphabetFile) {
     wchar_t alphBuffer[1000];
     if (fwscanf(alphabetFile, L"%ls", alphBuffer) > 0) {
-      wprintf(L"DEBUG > buffer len %d\n\n", wcslen(alphBuffer));
+      //wprintf(L"DEBUG > buffer len %d\n\n", wcslen(alphBuffer));
       alphabet = malloc((wcslen(alphBuffer) + 1) * sizeof(wchar_t));
       alphabet = wcscpy(alphabet, alphBuffer);
     }
@@ -99,7 +105,8 @@ CorrectorStatus spell_corrector(char *dictionaryFileLoc, char *inputFileLoc,
       if (!is_in_dictionary(buffer)) {
         /* We use the function to find possible suggestions for the word
          * in question */
-        wchar_t **suggestions = find_suggestions(buffer, alphabet, &sugAmount);
+        wchar_t **suggestions = find_suggestions(buffer, alphabet,
+                                                 &sugAmount);
         
         /* Add one to the misspellings counter */
         misspellings++;
