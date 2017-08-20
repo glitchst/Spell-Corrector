@@ -6,7 +6,7 @@ To compile the program, a C/C++ compiler is needed. I personally use GCC, and th
   
 Firstly, to compile the program into an executable file, run the following command in a terminal:  
   
-`gcc -o spellcorrector src/main.c src/corrector.c src/dictionary.c src/edits.c`
+`$ gcc -o spellcorrector src/main.c src/corrector.c src/dictionary.c src/edits.c`
 
 This will create a file called `spellcorrector`, with no extention, that's already labelled as an executable by your \*NIX or \*BSD system.
 
