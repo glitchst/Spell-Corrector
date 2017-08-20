@@ -4,15 +4,11 @@ A spell corrector program written in C, intented to work with many languages. I 
 ## How to Compile
 To compile the program, a C/C++ compiler is needed. I personally use GCC, and the instructions in this section are specifically for that compiler. Note that to compile the libraries, the additional flag `-std=c99` may be needed.  
   
-Firstly, to compile the libraries required by the program, the following command should be ran in the terminal:  
+Firstly, to compile the program into an executable file, run the following command in a terminal:  
   
-`$ gcc -c src/edits.c && gcc -c src/dictionary.c && gcc -c src/corrector.c`  
-  
-This should create 3 files in the main directory: **edits.o**, **dictionary.o**, and **corrector.o**. Then, to compile the program into an executable file, the following command should be ran in the terminal:  
-  
-`$ gcc -o spellcorrector src/main.c edits.o dictionary.o corrector.o && rm *.o`  
-  
-This command will create an executable file called **spellcorrector**, and it will also delete the 3 ".o" files, since they're not needed after the linkage. Once this executable is created, the program is able to run.  
+`gcc -o spellcorrector src/main.c src/corrector.c src/dictionary.c src/edits.c`
+
+This will create a file called `spellcorrector`, with no extention, that's already labelled as an executable by your \*NIX or \*BSD system.
 
 ## How to Use
 Once the program is compiled and the executable is created, 3 text files are required for its proper execution:
